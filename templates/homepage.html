@@ -1,0 +1,172 @@
+{% extends "base.html" %}
+
+
+{% block title %}PBS LearningMedia Search{% endblock %}
+
+{% block css %}
+<style type="text/css">
+.search-result {
+    margin-bottom: 3em;
+}
+.search-result .poster-image {
+    width: 160px;
+    max-height: 90px;
+    margin-top: 20px;
+}
+
+</style>
+{% endblock css %}
+
+
+{% block content %}
+
+<div class="jumbotron">
+<div class="container">
+    <h1>PBS LearningMedia Search</h1>
+    <p>A demonstration of the PBS Learning Media Search API.</p>
+</div>
+</div>
+
+<div class="container">
+    <form role="form" action="{% url "homepage" %}" method="get">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="form-group">
+                    <div class="form-inline">
+                        <label for="id_query" class="sr-only control-label">Search</label>
+                        <input name="query" value="{{ form.query.value }}" type="text" class="form-control" id="id_query" style="width: 100%">
+                    </div>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-default">Search</button>
+        </div>
+        <div class="row">
+            <div class="col-md-10">
+                <div id="facets" class="panel-group">
+
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#facets" href="#collapse-facets">
+                                    Available Facets
+                                </a>
+                            </h3>
+                        </div><!-- /.panel-heading- -->
+                        <div id="collapse-facets" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                <label class="checkbox-inline">
+                                  <input type="checkbox" id="facet_grades" name="facet_grades" value="grades"> Grades
+                                </label>
+                                <label class="checkbox-inline">
+                                  <input type="checkbox" id="facet_language" name="facet_language" value="language"> Language
+                                </label>
+                                <label class="checkbox-inline">
+                                  <input type="checkbox" id="facet_subjects" name="facet_subject" value="subject"> Subjects
+                                </label>
+                            </div><!-- /.panel-body -->
+                        </div><!-- /.collapse-facets -->
+                    </div><!-- /.panel -->
+
+
+                    {% if data.meta.facets %}
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            <h3 class="panel-title">
+                                <a data-toggle="collapse" data-parent="#facets" href="#collapse-facet-results">
+                                    Faceted Results
+                                </a>
+                            </h3>
+                        </div><!-- /.panel-heading- -->
+                        <div id="collapse-facet-results" class="panel-collapse collapse">
+                            <div class="panel-body">
+                                {% with data.meta.facets.fields as faceted_results %}
+                                {% for field_name, field_facets in faceted_results.items %}
+                                    <h4>{{ field_name }}</h4>
+                                    <table class="table">
+                                        <tr>
+                                            <th width="34%">ID</th>
+                                            <th width="33%">Title</th>
+                                            <th width="33%">Count</th>
+                                        </tr>
+                                        {% for facet in field_facets %}
+                                        <tr>
+                                            <td>{{ facet.id }}</td>
+                                            <td>{{ facet.title }}</td>
+                                            <td>{{ facet.count }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </table>
+                                    <hr>
+                                {% endfor %}
+                                {% endwith %}
+                            </div><!-- /.panel-body -->
+                        </div><!-- /.collapse-facets -->
+                    </div><!-- /.panel -->
+                    {% endif %}
+
+
+                </div><!-- /.panel-group -->
+            </div><!-- /.col-md-10 -->
+        </div><!-- /.row -->
+    </form>
+
+    {% if response %}
+    <hr>
+<pre>
+Total:     {{ data.meta.total }}
+</pre>
+
+    {% for obj in objects %}
+    <div class="row search-result">
+
+        <div class="col-md-2">
+            <img src="{{ obj.poster_image|default:"http://lorempixel.com/g/160/90/abstract/" }}" alt="Poster Image" class="poster-image">
+        </div>
+
+        <div class="col-md-10">
+            <h3>{{ obj.title }}</h3>
+            <p class="lead">{{ obj.description|safe }}</p>
+
+            <p>Media Type: {{ obj.media_type }}</p>
+
+            {% if obj.use_rights %}
+            <p>Use Rights: {{ obj.use_rights }}</p>
+            {% endif %}
+
+            {% if obj.credits %}
+            <p>Credits: {{ obj.credits|safe }}</p>
+            {% endif %}
+
+            {% if obj.brand %}
+            <p>Provided By: <img src="{{ obj.brand.logo }}" alt="{{ obj.brand.name }}" style="max-height: 1.5em;"> {{ obj.brand.name }}</p>
+            {% endif %}
+
+        </div>
+
+    </div>
+    <hr>
+    {% endfor %}
+
+    <pre>
+URL:          {{ response.url }}
+Status Code:  {{ response.status_code }} {{ response.reason }}
+Encoding:     {{ response.encoding }}
+Headers:      {% for k, v in response.headers.items %}{{ k }}: {{ v }}
+              {% endfor %}
+</pre>
+
+<h3>JSON</h3>
+{{ highlighted_json|safe }}
+    {% endif %}
+</div><!-- /.container -->
+
+{% endblock content %}
+
+
+{% block javascript-after %}
+<script>
+$(document).ready(function() {
+    $("#id_query").focus();
+});
+</script>
+{% endblock %}
