@@ -120,13 +120,18 @@ Total:     {{ data.meta.total }}
     <div class="row search-result">
 
         <div class="col-md-2">
-            <img src="{{ obj.poster_image|default:"http://lorempixel.com/g/160/90/abstract/" }}" alt="Poster Image" class="poster-image">
+            <a href="http://www.pbslearningmedia.org{{ obj.view_url }}" title="Open Resource in new window" target="_blank">
+                <img src="{{ obj.poster_image|default:"http://lorempixel.com/g/160/90/abstract/" }}" alt="Poster Image" class="poster-image">
+            </a>
         </div>
 
         <div class="col-md-10">
-            <h3>{{ obj.title }}</h3>
+            <a href="http://www.pbslearningmedia.org{{ obj.view_url }}" title="Open Resource in new window" target="_blank">
+                <h3>{{ obj.title }}</h3>
+            </a>
             <p class="lead">{{ obj.description|safe }}</p>
 
+            <p>Grades: {{ obj.grades }}</p>
             <p>Media Type: {{ obj.media_type }}</p>
 
             {% if obj.use_rights %}
