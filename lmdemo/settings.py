@@ -20,6 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = ''
 
 # PBS LM API security credentials.
+LMAPI_URI = ''
 LMAPI_USERNAME = ''
 LMAPI_APIKEY = ''
 from .secrets import *
