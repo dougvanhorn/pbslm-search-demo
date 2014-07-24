@@ -1,0 +1,13 @@
+# Project requirements.
+
+# Django.
+Django==1.6.5
+
+# For making API calls easier.
+requests==2.3.0
+
+# Use pygments to do source code pretty printing.
+Pygments==1.6
+
+# Optional
+ipython==2.1.0
