@@ -1,0 +1,12 @@
+# Compiled files.
+*.pyc
+
+# Virtual Environment.
+ve/
+
+# Database.
+db.sqlite3
+
+# Secret/Private settings.
+lmdemo/secrets.py
+
