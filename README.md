@@ -32,8 +32,8 @@ touch ./lmdemo/secrets.py
 ## lmdemo/secrets.py ##
 
 Your secret information needs to be kept secret.  This project uses a
-secrets.py file that is imported into the Django settings file.  The secrets
-file will need the following settings for the project to work:
+`secrets.py` file that is imported into the Django settings file.  The file
+will need the following settings for the project to work:
 
 ```python    
 # Place all private settings into a secrets module.  Don't check it in.
@@ -46,7 +46,7 @@ LMAPI_USERNAME = ''
 LMAPI_APIKEY = ''
 ```
 
-You can generate a new secret key with the following Python:
+You can generate a new Django style secret key with the following Python:
 
 ```python
 import random
