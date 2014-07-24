@@ -6,12 +6,13 @@ import requests
 from django.conf import settings
 
 
-SEARCH = "http://api-qa.pbslm.org/api/v2/search/"
-LO = "http://api-qa.pbslm.org/api/v2/lo/"
+SEARCH = "{}/search/".format(settings.LMAPI_URI)
+LO = "{}/lo/".format(settings.LMAPI_URI)
 
-AUTHORIZATION = {'Authorization': 'ApiKey %s:%s' % (
-    settings.LMAPI_USERNAME, settings.LMAPI_APIKEY)
-}
+AUTHORIZATION = {'Authorization': 'ApiKey {}:{}'.format(
+    settings.LMAPI_USERNAME,
+    settings.LMAPI_APIKEY,
+)}
 
 
 """API Feedback:
