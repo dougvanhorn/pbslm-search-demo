@@ -40,6 +40,9 @@ will need the following settings for the project to work:
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = ''
 
+# Production Login Bypass Credentials
+LOGIN_BYPASS_KEY = ''
+
 # PBS LM API security credentials.
 LMAPI_URI = ''
 LMAPI_USERNAME = ''
