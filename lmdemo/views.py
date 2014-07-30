@@ -4,11 +4,13 @@ import pygments
 import pygments.lexers
 import pygments.formatters
 
+from django import http
 from django.contrib import messages
 from django.shortcuts import render
 
 from . import forms
 from . import lmapi
+from . import loginbypass
 
 
 # Utility functions.
@@ -75,6 +77,18 @@ def homepage(request):
     return render(request, t, d)
 
 
-# Given a request, return a partial HTML snippet to be included as search
-# results.
+def login_bypass(request):
+    """Use PBS Login Bypass to send user to the production website for the
+    selected resource.
+    """
+    lm_url = request.GET.get('url', '/')
+    redirect_url = loginbypass.get_redirect(
+        url=lm_url,
+        user_id='lmdemo-271828',
+        email='lm-search-demo@example.com',
+        first_name='LMSearchDemo',
+        last_name='ExampleUser'
+    )
+
+    return http.HttpResponseRedirect(redirect_url)
 

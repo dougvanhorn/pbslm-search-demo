@@ -146,6 +146,9 @@ Total:     {{ data.meta.total }}
             <p>Provided By: <img src="{{ obj.brand.logo }}" alt="{{ obj.brand.name }}" style="max-height: 1.5em;"> {{ obj.brand.name }}</p>
             {% endif %}
 
+            <p><a href="{% url "login_bypass" %}?url={{ obj.view_url }}" title="Log into PBS as lm-search-demo@example.com" target="_blank">PBS Login Bypass</a></p>
+            {# <p>PBS LTI</p> #}
+
         </div>
 
     </div>

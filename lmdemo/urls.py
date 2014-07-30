@@ -11,4 +11,8 @@ urlpatterns = patterns(
     url(r'^admin/', include(admin.site.urls)),
 
     url(r'^$', lmdemo.views.homepage, name="homepage"),
+
+    url(r'^login-bypass$',
+        lmdemo.views.login_bypass,
+        name="login_bypass"),
 )
