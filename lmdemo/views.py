@@ -82,12 +82,14 @@ def login_bypass(request):
     selected resource.
     """
     lm_url = request.GET.get('url', '/')
+    user_id = request.GET.get('user_id', 'lmdemo-271828')
+    email = user_id + "@example.com"
     redirect_url = loginbypass.get_redirect(
         url=lm_url,
-        user_id='lmdemo-271828',
-        email='lm-search-demo@example.com',
+        user_id=user_id,
+        email=email,
         first_name='LMSearchDemo',
-        last_name='ExampleUser'
+        last_name='ExampleUser',
     )
 
     return http.HttpResponseRedirect(redirect_url)
