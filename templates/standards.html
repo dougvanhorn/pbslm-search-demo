@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+
+{% block title %}Standards{% endblock %}
+
+{% block css %}
+{{ block.super }}
+<style type="text/css">
+
+
+</style>
+{% endblock css %}
+
+
+{% block content %}
+<div class="container">
+
+<h1>Standards Tree</h1>
+
+
+{% if response %}
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Type</th>
+            <th>State Standard</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for obj in objects %}
+        <tr>
+            {% if obj.children %}
+            <td>
+                <a href="{% url "standards" obj.children %}" title="{{ obj.guid|default:"No GUID" }}">{{ obj.id }}</a>
+            </td>
+            {% else %}
+            <td>
+                <abbr title="{{ obj.guid|default:"No GUID" }}">{{ obj.id }}</abbr>
+            </td>
+            {% endif %}
+            <td>{{ obj.title }}</td>
+            <td>{{ obj.type }}</td>
+            <td>{{ obj.state_standard_id|default:"" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="2"
+                class="bg-warning">No Response was found.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<hr>
+<div class="panel panel-default">
+    <div class="panel-heading" data-toggle="collapse" data-target="#pygments-json" aria-expanded="false" style="cursor: pointer;">
+        JSON Content
+    </div>
+    <div id="pygments-json" class="panel-body collapse">
+        {{ json|safe }}
+    </div>
+</div>
+
+
+
+<hr>
+<div class="panel panel-default">
+    <div class="panel-heading" data-toggle="collapse" data-target="#response-statistics" aria-expanded="false" style="cursor: pointer;">
+        Response Statistics
+    </div>
+    <div id="response-statistics" class="panel-body collapse">
+        <pre>
+Count:        {{ data.meta.count }}
+Total:        {{ data.meta.total }}
+URL:          {{ response.url }}
+Status Code:  {{ response.status_code }} {{ response.reason }}
+Encoding:     {{ response.encoding }}
+Headers:      {% for k, v in response.headers.items %}{{ k }}: {{ v }}
+              {% endfor %}
+        </pre>
+    </div>
+</div>
+
+
+
+{% else %}
+<p class="bg-warning">No response was found.</p>
+{% endif %}
+
+
+</div><!-- /.container -->
+{% endblock content %}
+

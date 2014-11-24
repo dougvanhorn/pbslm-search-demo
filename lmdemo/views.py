@@ -94,3 +94,39 @@ def login_bypass(request):
 
     return http.HttpResponseRedirect(redirect_url)
 
+
+def standards(request, path=None):
+    """Render a navigable Standards Tree.
+
+    User can navigate down through the Standards Tree API endpoint.
+
+    No upward navigation is provided as the API does not provide it.
+    """
+    template = 'standards.html'
+    context = {}
+
+    response = lmapi.standards(path=path)
+
+    # Reponse Data
+    context['response'] = response
+    data = response.json()
+    context['data'] = data
+    context['meta'] = data['meta']
+
+    objects = data['objects']
+    objects.sort(key=lambda obj: obj['title'])
+    # Loop over the objects and modify the Children URL for use in this app.
+    # The modified URL Path can be passed directly to this view and to the
+    # underlying API call for standards.
+    for obj in objects:
+        children = obj.get('children', None)
+        if children:
+            slice_index = children.rfind('standard_tree/')
+            obj['children'] = children[slice_index+14:]
+    context['objects'] = objects
+
+    # Highlighted JSON
+    context['json'] = _pygments_json(data)
+
+    return render(request, template, context)
+

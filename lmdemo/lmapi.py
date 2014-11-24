@@ -8,6 +8,8 @@ from django.conf import settings
 
 SEARCH = "{}/search/".format(settings.LMAPI_URI)
 LO = "{}/lo/".format(settings.LMAPI_URI)
+STANDARDS = "{}/standard_tree/".format(settings.LMAPI_URI)
+
 
 AUTHORIZATION = {'Authorization': 'ApiKey {}:{}'.format(
     settings.LMAPI_USERNAME,
@@ -21,6 +23,9 @@ copywright is spelled wrong.
 
 Do we want to show the media_urls?
 """
+
+class LMAPIException(Exception):
+    pass
 
 
 def get_session():
@@ -54,4 +59,24 @@ def search(q, facets=None):
     response = session.get(SEARCH, params=parameters)
 
     return response
+
+
+def standards(path=''):
+    """
+    Arguments:
+        path: an ID path to use in the query, from the children URL.
+
+    Returns:
+        A `requests.Response` instance.
+    """
+    standard_uri = "{}{}".format(STANDARDS, path)
+
+    session = get_session()
+    response = session.get(standard_uri)
+
+    if response.status_code != 200:
+        raise LMAPIException()
+
+    return response
+
 

@@ -12,6 +12,8 @@ urlpatterns = patterns(
 
     url(r'^$', lmdemo.views.homepage, name="homepage"),
 
+    url(r'^standards/(?P<path>.*)$', lmdemo.views.standards, name="standards"),
+
     url(r'^login-bypass$',
         lmdemo.views.login_bypass,
         name="login_bypass"),
