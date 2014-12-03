@@ -9,6 +9,7 @@ from django.conf import settings
 SEARCH = "{}/search/".format(settings.LMAPI_URI)
 LO = "{}/lo/".format(settings.LMAPI_URI)
 STANDARDS = "{}/standard_tree/".format(settings.LMAPI_URI)
+SUBJECTS = "{}/subject_tree/".format(settings.LMAPI_URI)
 
 
 AUTHORIZATION = {'Authorization': 'ApiKey {}:{}'.format(
@@ -62,7 +63,7 @@ def search(q, facets=None):
 
 
 def standards(path=''):
-    """
+    """Return the Standards response for the given path.
     Arguments:
         path: an ID path to use in the query, from the children URL.
 
@@ -79,4 +80,22 @@ def standards(path=''):
 
     return response
 
+
+def subjects(path=''):
+    """Return the subjects response for the given path.
+    Arguments:
+        path: an ID path to use in the query, from the children URL.
+
+    Returns:
+        A `requests.Response` instance.
+    """
+    standard_uri = "{}{}".format(SUBJECTS, path)
+
+    session = get_session()
+    response = session.get(standard_uri)
+
+    if response.status_code != 200:
+        raise LMAPIException()
+
+    return response
 

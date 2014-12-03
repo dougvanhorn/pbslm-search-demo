@@ -13,6 +13,7 @@ urlpatterns = patterns(
     url(r'^$', lmdemo.views.homepage, name="homepage"),
 
     url(r'^standards/(?P<path>.*)$', lmdemo.views.standards, name="standards"),
+    url(r'^subjects/(?P<path>.*)$', lmdemo.views.subjects, name="subjects"),
 
     url(r'^login-bypass$',
         lmdemo.views.login_bypass,
