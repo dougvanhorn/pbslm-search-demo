@@ -27,7 +27,7 @@
             <th>#</th>
             <th>Title</th>
             <th>Type</th>
-            <th>State Standard</th>
+            <th>Dot Notation</th>
         </tr>
     </thead>
     <tbody>
@@ -44,7 +44,7 @@
             {% endif %}
             <td>{{ obj.title }}</td>
             <td>{{ obj.type }}</td>
-            <td>{{ obj.state_standard_id|default:"" }}</td>
+            <td>{{ obj.dot_notation|default:"<em>none</em>" }}</td>
         </tr>
         {% empty %}
         <tr>
