@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% load bootstrap3 %}
+
+
+{% block title %}Login Bypass{% endblock %}
+
+{% block content %}
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Login Bypass</h1>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+
+            <form action="{% url "login_bypass_form" %}" method="post" role="form" class="form">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% buttons %}
+                <button type="submit" class="btn btn-default">Submit</button>
+                {% endbuttons %}
+            </form>
+
+        </div>
+    </div>
+
+
+    {% if login_bypass_error %}
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Status Code: {{ login_bypass_error.response.status_code }}</h1>
+            <iframe width="100%" height="800px" src="{% url "login_bypass_error" %}"></iframe>
+        </div>
+    </div>
+    {% endif %}
+
+
+</div><!-- /.container -->
+{% endblock content %}
+

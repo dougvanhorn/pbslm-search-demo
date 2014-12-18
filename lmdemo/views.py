@@ -1,8 +1,11 @@
 # Views for exploring the LM API.
+import datetime
+import hashlib
 import json
 import pygments
 import pygments.lexers
 import pygments.formatters
+import random
 
 from django import http
 from django.contrib import messages
@@ -76,6 +79,57 @@ def homepage(request):
 
     return render(request, t, d)
 
+
+def login_bypass_error(request):
+    """Show the Error response from the API.
+    """
+    return http.HttpResponse(request.session.get('login_bypass_error'))
+
+
+def login_bypass_form(request):
+    template = 'login-bypass.html'
+    context = {}
+
+    if request.method == 'GET':
+        today = datetime.date.today()
+        random_string = hashlib.md5(bytes(str(random.random()).encode('utf-8'))).hexdigest()
+        user_id = today.strftime('lmdemo-%y%m%d-')
+        user_id += random_string[:3]
+
+        initial_form = {
+            'lm_url': '/',
+            'first_name': 'Test',
+            'last_name': 'Example',
+            'user_id': user_id,
+            'email': '{}@example.com'.format(user_id),
+            'postal_code': '63303',
+        }
+        form = forms.LoginBypassForm(initial=initial_form)
+        context['form'] = form
+        return render(request, template, context)
+
+    else:
+        form = forms.LoginBypassForm(request.POST)
+        if form.is_valid():
+            cleaned_data = form.cleaned_data
+            try:
+                redirect_url = loginbypass.get_redirect(
+                    url=cleaned_data.get('lm_url'),
+                    user_id=cleaned_data.get('user_id'),
+                    email=cleaned_data.get('email'),
+                    first_name=cleaned_data.get('first_name'),
+                    last_name=cleaned_data.get('last_name'),
+                    postal_code=cleaned_data.get('postal_code'),
+                )
+                return http.HttpResponseRedirect(redirect_url)
+            
+            except loginbypass.LoginBypassError as e:
+                request.session['login_bypass_error'] = e.response.text
+                context['login_bypass_error'] = e
+
+        context['form'] = form
+        return render(request, template, context)
+        
 
 def login_bypass(request):
     """Use PBS Login Bypass to send user to the production website for the

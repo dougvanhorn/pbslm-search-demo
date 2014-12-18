@@ -3,6 +3,9 @@
 # Django.
 Django==1.6.5
 
+# Bootstrap
+django-bootstrap3==5.0.3
+
 # For making API calls easier.
 requests==2.3.0
 
