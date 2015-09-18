@@ -19,4 +19,6 @@ class LoginBypassForm(forms.Form):
     first_name = forms.CharField(max_length=100)
     last_name = forms.CharField(max_length=100)
     postal_code = forms.CharField(max_length=10, required=False)
+    key = forms.CharField(max_length=300, required=False)
+    endpoint = forms.CharField(max_length=300, required=False)
 

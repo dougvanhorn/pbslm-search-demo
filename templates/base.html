@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+{% load bootstrap3 %}
 
 <head>
     <!-- http://getbootstrap.com/getting-started#template -->
@@ -48,6 +49,11 @@
         </div><!-- /.container -->
     </div><!-- /navbar -->
     {% endblock navigation %}
+
+    {% block messages %}
+        {% bootstrap_javascript jquery=1 %}
+        {% bootstrap_messages %}
+    {% endblock messages %}
 
     {% block content %}
     <div class="container">

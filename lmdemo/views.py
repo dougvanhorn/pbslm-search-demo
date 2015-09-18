@@ -2,14 +2,17 @@
 import datetime
 import hashlib
 import json
+import pprint
 import pygments
 import pygments.lexers
 import pygments.formatters
 import random
 
 from django import http
+from django.conf import settings
 from django.contrib import messages
 from django.shortcuts import render
+from django.views.generic import View
 
 from . import forms
 from . import lmapi
@@ -86,11 +89,15 @@ def login_bypass_error(request):
     return http.HttpResponse(request.session.get('login_bypass_error'))
 
 
-def login_bypass_form(request):
-    template = 'login-bypass.html'
-    context = {}
 
-    if request.method == 'GET':
+class LoginBypass(View):
+    """View for the Login Bypass form display and post.
+    """
+    template_name = 'login-bypass.html'
+
+    def get(self, request):
+        """Just like a regular view.
+        """
         today = datetime.date.today()
         random_string = hashlib.md5(bytes(str(random.random()).encode('utf-8'))).hexdigest()
         user_id = today.strftime('lmdemo-%y%m%d-')
@@ -103,12 +110,17 @@ def login_bypass_form(request):
             'user_id': user_id,
             'email': '{}@example.com'.format(user_id),
             'postal_code': '63303',
+            'endpoint': loginbypass.PROD_ENDPOINT,
+            'key': settings.LOGIN_BYPASS_KEY,
         }
         form = forms.LoginBypassForm(initial=initial_form)
-        context['form'] = form
-        return render(request, template, context)
+        context = {'form': form}
+        return render(request, self.template_name, context)
 
-    else:
+
+    def post(self, request):
+        """The other half of the regular view.
+        """
         form = forms.LoginBypassForm(request.POST)
         if form.is_valid():
             cleaned_data = form.cleaned_data
@@ -120,16 +132,19 @@ def login_bypass_form(request):
                     first_name=cleaned_data.get('first_name'),
                     last_name=cleaned_data.get('last_name'),
                     postal_code=cleaned_data.get('postal_code'),
+                    endpoint=cleaned_data.get('endpoint',
+                                              loginbypass.PROD_ENDPOINT),
+                    key=cleaned_data.get('key'),
                 )
                 return http.HttpResponseRedirect(redirect_url)
-            
+
             except loginbypass.LoginBypassError as e:
                 request.session['login_bypass_error'] = e.response.text
                 context['login_bypass_error'] = e
 
-        context['form'] = form
-        return render(request, template, context)
-        
+        context = {'form': form}
+        return render(request, self.template_name, context)
+
 
 def login_bypass(request):
     """Use PBS Login Bypass to send user to the production website for the

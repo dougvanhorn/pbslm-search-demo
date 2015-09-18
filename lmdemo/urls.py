@@ -20,7 +20,7 @@ urlpatterns = patterns(
         name="login_bypass"),
 
     url(r'^login-bypass-form$',
-        lmdemo.views.login_bypass_form,
+        lmdemo.views.LoginBypass.as_view(),
         name="login_bypass_form"),
 
     url(r'^login-bypass-error$',
